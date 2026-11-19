@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Кто из них? — Bloblox</title>
+  <link rel="stylesheet" href="./hide/hide.css">
+</head>
+<body>
+  <canvas id="view"></canvas>
+
+  <div id="loading" class="loading"><div class="loading__deer">🦌</div><div>Загружаем лес…</div></div>
+  <div id="startOverlay" class="start"><div class="start__card">
+    <h1>Кто из них?</h1>
+    <p>Прячься среди оленей или найди, кто из них настоящий игрок.</p>
+    <input id="nameInput" class="name-input" maxlength="14" placeholder="Твоё имя" autocomplete="off">
+    <div id="onlineBox" class="online-box">
+      <button id="createBtn" class="play" type="button">Создать комнату</button>
+      <div class="join-row"><input id="codeInput" class="code-input" inputmode="numeric" maxlength="4" placeholder="Код" autocomplete="off"><button id="joinBtn" class="join-btn" type="button">Войти</button></div>
+    </div>
+    <div id="netStatus" class="net-status"></div>
+    <button id="startBtn" class="ghost" type="button">Играть одному с ботами</button>
+    <a class="back-link" href="./index.html">← назад в Bloblox</a>
+  </div></div>
+
+  <div id="hud" class="hud show">
+    <button id="pauseBtn" class="pause-btn" type="button">☰</button>
+    <a id="coinsChip" class="coins-chip">🪙 0</a>
+    <button id="roomChip" class="room-chip" type="button"></button>
+    <div class="top">
+      <div id="bigTimer" class="big-timer">15</div>
+      <div id="roundInfo" class="top__row"><div id="misses" class="misses"></div><div id="hidersLeft" class="hiders">🦌 3</div></div>
+      <div id="banner" class="banner"></div>
+      <div id="watch" class="watch">👀 Охотник смотрит в твою сторону</div>
+    </div>
+    <div id="suspicion" class="suspicion"><span>Подозрение</span><div class="bar"><div id="suspicionFill"></div></div></div>
+    <div id="crosshair" class="crosshair"></div>
+    <div id="scope" class="scope"></div>
+    <div id="hint" class="hint"></div>
+    <div id="prompt" class="prompt"></div>
+    <div id="toast" class="toast"></div>
+    <div id="roleCard" class="role-card"><div id="roleIcon">🦌</div><div id="roleTitle">Ты — олень</div><div id="roleSub"></div></div>
+
+    <!-- телефон и планшет -->
+    <div id="joy" class="joy"><div id="knob" class="knob"></div></div>
+    <div class="touch-btns lobby-only">
+      <button id="btnShop" type="button" class="shop-btn">🛒</button>
+      <button id="btnJumpLobby" type="button" class="big">⤴</button>
+    </div>
+    <div class="touch-btns deer-only">
+      <button id="btnRun" type="button">🏃</button>
+      <button id="btnLie" type="button">💤</button>
+      <button id="btnLook" type="button">👀</button>
+      <button id="btnGraze" type="button" class="big">🌿</button>
+    </div>
+    <div class="touch-btns hunter-only">
+      <button id="btnJump" type="button">⤴</button>
+      <button id="btnZoom" type="button">🔭</button>
+      <button id="btnFire" type="button" class="big fire">🎯</button>
+    </div>
+  </div>
+
+  <div id="prepOverlay" class="prep">
+    <div class="prep__icon">🙈</div>
+    <div class="prep__title">Олени прячутся…</div>
+    <div id="prepCount" class="prep__count">15</div>
+    <div class="prep__tip">Смотри, кто из оленей ведёт себя странно: отстаёт от стада, смотрит на тебя, не убегает от выстрела.</div>
+  </div>
+
+  <div id="mapIntro" class="map-intro">
+    <canvas id="mapIntroPic" width="512" height="260"></canvas>
+    <div class="map-intro__label">Карта</div>
+    <div id="mapIntroName" class="map-intro__name">Лесная поляна</div>
+  </div>
+
+  <section id="shopPanel" class="screen dim">
+    <div class="shop-card">
+      <div class="shop-head"><h2>Лавка охотника</h2><span id="shopCoins" class="coins">🪙 0</span><button id="shopClose" class="x-btn" type="button">×</button></div>
+      <div id="shopList" class="shop-list"></div>
+    </div>
+  </section>
+
+  <section id="pauseMenu" class="screen dim">
+    <div class="small-card">
+      <h2>Пауза</h2>
+      <button id="resumeBtn" class="play" type="button">Продолжить</button>
+      <a class="ghost" href="./index.html">Выйти в Bloblox</a>
+    </div>
+  </section>
+
+  <section id="endScreen" class="screen dim">
+    <div class="small-card">
+      <h2 id="endTitle">Победа!</h2>
+      <p id="endReason" class="sub"></p>
+      <ul id="endList" class="end-list"></ul>
+      <div id="endCoins" class="end-coins"></div>
+      <div id="endBack" class="end-back">В лобби через 7</div>
+    </div>
+  </section>
+
+  <script src="./vendor/three.min.js"></script>
+  <script src="./hide/world.js"></script>
+  <script src="./hide/deer.js"></script>
+  <script src="./shared/avatar.js"></script>
+  <script src="./hide/people.js"></script>
+  <script src="./hide/lobby.js"></script>
+  <script src="./hide/net.js"></script>
+  <script src="./hide/game.js"></script>
+</body>
+</html>

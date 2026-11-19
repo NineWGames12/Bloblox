@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <title>Bloblox Platform</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="platformHub" class="platform-hub">
+    <header class="rb-top">
+      <div class="rb-logo">BLOBLOX</div>
+      <nav class="rb-top__links">
+        <button type="button" data-hub="games">Игры</button>
+        <button type="button" data-hub="avatar">Аватар</button>
+        <button type="button" data-hub="friends">Друзья</button>
+      </nav>
+      <label class="rb-search"><span>🔍</span><input id="hubSearch" type="text" placeholder="Поиск игр"></label>
+      <div class="rb-top__right">
+        <span id="hubCoins" class="rb-coins">🪙 0</span>
+        <button type="button" class="rb-icon" data-hub="settings" title="Настройки">⚙️</button>
+      </div>
+    </header>
+
+    <aside class="rb-side">
+      <button type="button" class="rb-nav active" data-hub="home"><i>🏠</i><span>Главная</span></button>
+      <button type="button" class="rb-nav" data-hub="games"><i>🎮</i><span>Игры</span></button>
+      <button type="button" class="rb-nav" data-hub="avatar"><i>👤</i><span>Аватар</span></button>
+      <button type="button" class="rb-nav" data-hub="friends"><i>👥</i><span>Друзья</span></button>
+      <button type="button" class="rb-nav" data-hub="settings"><i>⚙️</i><span>Настройки</span></button>
+    </aside>
+
+    <main class="rb-main">
+      <section id="hubHome" class="rb-hello">
+        <div class="rb-hello__avatar hub-avatar-preview"><canvas id="hubAvatarCanvas"></canvas></div>
+        <div class="rb-hello__text">
+          <div id="hubAvatarLabel" class="rb-hello__label">Platform Avatar</div>
+          <h1>Привет, <span id="hubAvatarName">Block Hero</span>!</h1>
+          <div class="rb-hello__row"><span id="hubAvatarMood" class="rb-chip">Улыбка</span><button type="button" class="rb-chip rb-chip--button" data-hub="avatar">✏️ Изменить аватар</button></div>
+          <div id="hubAvatarNote" class="rb-hello__note">Этот аватар автоматически появится в других играх платформы.</div>
+        </div>
+      </section>
+
+      <section id="hubFriends" class="rb-section">
+        <h2 class="rb-heading">Играть с друзьями</h2>
+        <div class="net-panel rb-card">
+          <div class="net-panel__title">👥 Играй с друзьями: создай комнату и скинь код — до 10 человек во всех играх</div>
+          <div class="net-panel__row">
+            <input id="netName" type="text" maxlength="18" placeholder="Твоё имя">
+            <button id="netCreate" class="net-panel__main" type="button">Создать комнату</button>
+            <span class="net-panel__or">или</span>
+            <input id="netCode" type="text" inputmode="numeric" maxlength="4" placeholder="Код">
+            <button id="netJoin" type="button">Войти</button>
+          </div>
+          <div id="netStatus" class="net-panel__status"></div>
+        </div>
+      </section>
+
+      <section id="hubGames" class="rb-section">
+        <h2 class="rb-heading">Рекомендуем для тебя <span>›</span></h2>
+        <div class="rb-games">
+          <button id="launchCityGame" class="rb-tile" type="button">
+            <div id="cityThumb" class="rb-tile__thumb rb-tile__thumb--city"><span class="rb-tile__play">▶</span></div>
+            <div class="rb-tile__title">Block City</div>
+            <div class="rb-tile__tags"><span>🏙️ Город</span><span>🛸 Машины</span><span>💼 Работа</span></div>
+            <div id="cityGameMeta" class="rb-tile__meta">Первая мини-игра платформы</div>
+            <div id="cityGameDesc" class="rb-tile__desc">Гуляй по городу, заходи в магазины, встречай NPC и исследуй улицы.</div>
+            <div id="cityGameAction" class="rb-tile__action">Играть</div>
+          </button>
+
+          <button id="launchParkourGame" class="rb-tile" type="button">
+            <div id="parkourThumb" class="rb-tile__thumb rb-tile__thumb--parkour"><span class="rb-tile__play">▶</span></div>
+            <div class="rb-tile__title">Bloblox Parkour</div>
+            <div class="rb-tile__tags"><span>🧗 Паркур</span><span>🏁 Чекпоинты</span></div>
+            <div id="parkourGameMeta" class="rb-tile__meta">Вторая мини-игра платформы</div>
+            <div id="parkourGameDesc" class="rb-tile__desc">Прыгай по платформам, доходи до чекпоинтов и проходи трассу.</div>
+            <div id="parkourGameAction" class="rb-tile__action">Играть</div>
+          </button>
+
+          <a id="launchHideGame" class="rb-tile rb-tile--link" href="./hidegame.html">
+            <div class="rb-tile__thumb rb-tile__thumb--hide"><canvas id="hideThumb" width="320" height="180"></canvas><span class="rb-tile__play">▶</span></div>
+            <div class="rb-tile__title">Кто из них?</div>
+            <div class="rb-tile__desc">Спрячься в стаде оленей — или найди, кто из них настоящий игрок.</div>
+            <div class="rb-tile__action">Играть</div>
+          </a>
+        </div>
+      </section>
+      <script>
+        // обложка «Кто из них?»: утренний лес, стадо оленей и один олень со знаком вопроса
+        (function () {
+          const c = document.getElementById("hideThumb");
+          if (!c) return;
+          const g = c.getContext("2d");
+          const sky = g.createLinearGradient(0, 0, 0, 180);
+          sky.addColorStop(0, "#7fb8f0");
+          sky.addColorStop(0.55, "#ffe2b8");
+          sky.addColorStop(0.56, "#7cbf55");
+          sky.addColorStop(1, "#4f8f3a");
+          g.fillStyle = sky;
+          g.fillRect(0, 0, 320, 180);
+          g.fillStyle = "#fff2c8";
+          g.beginPath(); g.arc(250, 52, 18, 0, Math.PI * 2); g.fill();
+          const pine = (x, y, s, col) => {
+            g.fillStyle = "#5a3e2a"; g.fillRect(x - 2 * s, y - 6 * s, 4 * s, 8 * s);
+            g.fillStyle = col;
+            for (let i = 0; i < 3; i += 1) { g.beginPath(); g.moveTo(x - (14 - i * 3) * s, y - (6 + i * 9) * s); g.lineTo(x + (14 - i * 3) * s, y - (6 + i * 9) * s); g.lineTo(x, y - (24 + i * 9) * s); g.closePath(); g.fill(); }
+          };
+          for (let i = 0; i < 14; i += 1) pine(10 + i * 24, 102, 0.9 + (i % 3) * 0.15, i % 2 ? "#2f6a3a" : "#3b7a3f");
+          const deer = (x, y, s, flip, down) => {
+            g.save(); g.translate(x, y); g.scale(flip ? -s : s, s);
+            g.fillStyle = "#9a6234";
+            g.beginPath(); g.ellipse(0, 0, 22, 11, 0, 0, Math.PI * 2); g.fill();
+            [-14, -8, 9, 15].forEach((lx) => g.fillRect(lx - 2, 6, 4, 22));
+            g.fillStyle = "#f3e6cf"; g.beginPath(); g.ellipse(-20, -4, 5, 6, 0, 0, Math.PI * 2); g.fill();
+            g.fillStyle = "#9a6234";
+            if (down) { g.beginPath(); g.moveTo(14, -4); g.lineTo(24, 18); g.lineTo(30, 16); g.lineTo(20, -8); g.fill(); g.beginPath(); g.ellipse(28, 20, 7, 5, 0.6, 0, Math.PI * 2); g.fill(); }
+            else { g.beginPath(); g.moveTo(12, -6); g.lineTo(20, -26); g.lineTo(27, -24); g.lineTo(20, -2); g.fill(); g.beginPath(); g.ellipse(26, -28, 8, 6, 0.3, 0, Math.PI * 2); g.fill(); g.fillStyle = "#1d1a18"; g.beginPath(); g.arc(28, -29, 1.6, 0, Math.PI * 2); g.fill(); }
+            g.restore();
+          };
+          deer(60, 132, 1, false, true);
+          deer(112, 140, 0.9, true, true);
+          deer(250, 136, 0.95, true, true);
+          deer(178, 128, 1.1, false, false);
+          g.fillStyle = "#ffd23f";
+          g.font = "bold 34px Segoe UI, Arial";
+          g.textAlign = "center";
+          g.fillText("?", 206, 82);
+          g.lineWidth = 3; g.strokeStyle = "#7a5a10"; g.strokeText("?", 206, 82);
+        })();
+      </script>
+    </main>
+  </div>
+  <button id="backToHubButton" class="hub-back hidden" type="button">На платформу</button>
+  <button id="panelToggle" class="panel-toggle" type="button">Персонаж</button>
+  <button id="phoneButton" class="phone-button hidden" type="button">Телефон</button>
+
+  <div id="missionHud" class="mission-hud hidden">
+    <div id="missionArrow" class="mission-arrow">▲</div>
+    <div class="mission-hud__copy">
+      <div id="missionHudTitle" class="mission-hud__title">Цель задания</div>
+      <div id="missionHudText" class="mission-hud__text">Выбери работу в телефоне</div>
+    </div>
+  </div>
+
+  <!-- смартфон: строка статуса, экран с приложениями, кнопка «домой» -->
+  <section id="phonePanel" class="phone-panel hidden">
+    <div class="phone-device">
+      <div class="phone-notch"></div>
+      <div class="phone-status">
+        <span id="phoneClock">12:00</span>
+        <span class="phone-status__right"><span id="phoneStatusCoins">🪙 0</span> 📶 🔋</span>
+        <button id="phoneClose" class="phone-status__close" type="button" aria-label="Закрыть">×</button>
+      </div>
+      <div id="phoneScreen" class="phone-screen"></div>
+      <button id="phoneHome" class="phone-home-bar" type="button" aria-label="Домой"></button>
+    </div>
+  </section>
+
+  <aside id="sidebar" class="sidebar collapsed">
+    <div class="sidebar-head">
+      <h1 id="sidebarTitle">Каталог аватара</h1>
+      <p id="sidebarLead" class="lead">Собери своего героя в стиле Bloblox Platform. Все изменения сохраняются для платформы и игр.</p>
+    </div>
+
+    <div class="sidebar-avatar-card">
+      <div class="sidebar-avatar-stage">
+        <canvas id="sidebarAvatarCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="catalog-tabs" id="catalogTabs">
+      <button id="catalogTabBody" class="catalog-tab active" data-catalog="body" type="button">Тело</button>
+      <button id="catalogTabClothing" class="catalog-tab" data-catalog="clothing" type="button">Одежда</button>
+      <button id="catalogTabPants" class="catalog-tab" data-catalog="pants" type="button">Штаны</button>
+      <button id="catalogTabShoes" class="catalog-tab" data-catalog="shoes" type="button">Обувь</button>
+      <button id="catalogTabHair" class="catalog-tab" data-catalog="hair" type="button">Волосы</button>
+      <button id="catalogTabAccessories" class="catalog-tab" data-catalog="accessories" type="button">Аксессуары</button>
+      <button id="catalogTabMood" class="catalog-tab" data-catalog="mood" type="button">Эмоции</button>
+    </div>
+
+    <div id="catalogGrid" class="catalog-grid"></div>
+
+    <div class="info">
+      <div id="statusText">Статус: готово к запуску</div>
+      <div id="districtText">Район: платформа</div>
+    </div>
+
+    <div class="tips">
+      <div id="tipMove">WASD - движение</div>
+      <div id="tipJump">Пробел - прыжок</div>
+      <div id="tipCamera">Q / E - поворот камеры</div>
+      <div id="tipRun">Shift - быстрый бег</div>
+      <div id="tipEnter">R - войти или выйти из здания</div>
+      <div id="tipView">1 / 3 - переключение камеры</div>
+    </div>
+
+    <div id="helpText" class="help">Открой настройки внизу, чтобы сменить язык или изменить общие параметры героя.</div>
+
+    <div class="sidebar-footer">
+      <button id="settingsToggle" class="settings-toggle" type="button">Настройки</button>
+    </div>
+
+    <div id="settingsPanel" class="settings-panel collapsed">
+      <div class="settings-panel__header">
+        <h2 id="settingsTitle">Настройки</h2>
+        <p id="settingsLead">Здесь собраны язык, имя героя, цвета и режим камеры.</p>
+      </div>
+
+      <div class="mode-switch">
+        <button id="modeThirdLabel" class="mode-button active" data-mode="third">3-е лицо</button>
+        <button id="modeFirstLabel" class="mode-button" data-mode="first">1-е лицо</button>
+      </div>
+
+      <label class="field">
+        <span id="labelLanguage">Язык</span>
+        <select id="languageSelect">
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span id="labelAvatarName">Имя героя</span>
+        <input id="avatarName" type="text" value="Block Hero" maxlength="18">
+      </label>
+
+      <label class="field">
+        <span id="labelBodyColor">Цвет одежды</span>
+        <input id="bodyColor" type="color" value="#5dd9ff">
+      </label>
+
+      <label class="field">
+        <span id="labelHairColor">Цвет волос</span>
+        <input id="hairColor" type="color" value="#2f3542">
+      </label>
+
+      <label class="field">
+        <span id="labelAccentColor">Акцент</span>
+        <input id="accentColor" type="color" value="#ffd166">
+      </label>
+
+      <label class="field">
+        <span id="labelEyeColor">Цвет глаз</span>
+        <input id="eyeColor" type="color" value="#2b2d42">
+      </label>
+
+      <!-- Скрытые поля: в них хранится выбор из каталога аватара -->
+      <label class="field hidden-source">
+        <span>Тело</span>
+        <select id="bodyType">
+          <option value="man">Парень</option>
+          <option value="girl">Девушка</option>
+          <option value="boy">Мальчик</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Тон кожи</span>
+        <select id="skinTone">
+          <option value="fair">Бежевая</option>
+          <option value="porcelain">Фарфоровая</option>
+          <option value="light">Светлая</option>
+          <option value="tan">Загар</option>
+          <option value="brown">Смуглая</option>
+          <option value="deep">Тёмная</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Одежда</span>
+        <select id="outfitType">
+          <option value="hoodie">Толстовка</option>
+          <option value="tshirt">Футболка</option>
+          <option value="jacket">Куртка</option>
+          <option value="sweater">Свитер</option>
+          <option value="shirt">Рубашка</option>
+          <option value="tank">Майка</option>
+          <option value="suit">Костюм</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Штаны</span>
+        <select id="pantsType">
+          <option value="jeans">Джинсы</option>
+          <option value="joggers">Джоггеры</option>
+          <option value="shorts">Шорты</option>
+          <option value="trousers">Брюки</option>
+          <option value="cargo">Карго</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Обувь</span>
+        <select id="shoesType">
+          <option value="sneakers">Кроссовки</option>
+          <option value="hightops">Высокие кеды</option>
+          <option value="boots">Ботинки</option>
+          <option value="light">Туфли</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Прическа</span>
+        <select id="hairStyle">
+          <option value="short">Короткие</option>
+          <option value="long">Длинные</option>
+          <option value="bob">Каре</option>
+          <option value="ponytail">Хвостик</option>
+          <option value="bun">Пучок</option>
+          <option value="curly">Кудри</option>
+          <option value="spiky">Торчком</option>
+          <option value="mohawk">Ирокез</option>
+          <option value="buzz">Ёжик</option>
+          <option value="bald">Лысый</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Аксессуар</span>
+        <select id="headAccessory">
+          <option value="none">Без аксессуара</option>
+          <option value="cap">Кепка</option>
+          <option value="beanie">Шапка</option>
+          <option value="headphones">Наушники</option>
+          <option value="glasses">Очки</option>
+          <option value="sunglasses">Тёмные очки</option>
+          <option value="crown">Корона</option>
+          <option value="backpack">Рюкзак</option>
+        </select>
+      </label>
+
+      <label class="field hidden-source">
+        <span>Лицо</span>
+        <select id="faceMood">
+          <option value="smile">Улыбка</option>
+          <option value="happy">Радость</option>
+          <option value="wink">Подмигивает</option>
+          <option value="cool">Уверенный</option>
+          <option value="freckles">Веснушки</option>
+          <option value="neutral">Спокойный</option>
+          <option value="surprised">Удивлённый</option>
+          <option value="angry">Злой</option>
+          <option value="sleepy">Сонный</option>
+        </select>
+      </label>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <canvas id="gameCanvas"></canvas>
+    <div id="overlay" class="overlay hidden"></div>
+
+    <!-- мини-карта в углу; большая карта открывается на M -->
+    <div id="minimap" class="minimap hidden">
+      <canvas id="minimapCanvas" width="220" height="220"></canvas>
+      <div id="minimapPlace" class="minimap__place">Город</div>
+      <div class="minimap__hint">M — карта</div>
+    </div>
+
+    <div id="interactPrompt" class="interact-prompt hidden"></div>
+    <div id="mushroomChip" class="mushroom-chip hidden">🍄 0</div>
+    <div id="underwater" class="underwater hidden"></div>
+    <div id="flyerHud" class="flyer-hud hidden"></div>
+    <button id="netBadge" class="net-badge hidden" type="button"></button>
+
+    <!-- управление на планшете -->
+    <div id="touchControls" class="touch-controls">
+      <div id="touchStick" class="touch-stick"><div id="touchKnob" class="touch-stick__knob"></div></div>
+      <div class="touch-buttons">
+        <button data-tap="KeyG" type="button">Стена</button>
+        <button data-tap="view" type="button">Вид</button>
+        <button data-tap="KeyR" type="button" class="touch-main">Сесть<br>Выйти</button>
+        <button data-hold="ShiftLeft" type="button">Турбо</button>
+        <button data-hold="KeyC" type="button">Вниз</button>
+        <button data-hold="Space" type="button" class="touch-main">Вверх<br>Прыжок</button>
+      </div>
+    </div>
+
+    <div id="bigMap" class="big-map hidden">
+      <div class="big-map__panel">
+        <div class="big-map__header">
+          <span id="bigMapTitle">Карта мира</span>
+          <button id="bigMapClose" class="big-map__close" type="button">×</button>
+        </div>
+        <canvas id="bigMapCanvas" width="900" height="720"></canvas>
+      </div>
+    </div>
+
+    <!-- меню магазина: открывается на F внутри магазина или кафе -->
+    <div id="shopMenu" class="shop-menu hidden">
+      <div class="shop-menu__header">
+        <span id="shopMenuTitle">Магазин</span>
+        <span id="shopMenuCoins" class="shop-menu__coins">Монеты: 0</span>
+        <button class="big-map__close" type="button" onclick="closeShopMenu()">×</button>
+      </div>
+      <div id="shopMenuItems" class="shop-menu__items"></div>
+    </div>
+  </main>
+
+  <script src="./vendor/three.min.js"></script>
+  <script src="./vendor/GLTFLoader.js"></script>
+  <script src="./vendor/SkeletonUtils.js"></script>
+  <script src="./game.js"></script>
+</body>
+</html>

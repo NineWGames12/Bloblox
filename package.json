@@ -1,0 +1,13 @@
+{
+  "name": "bloblox-online",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bloblox: Block City, паркур и «Кто из них?» по сети",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
